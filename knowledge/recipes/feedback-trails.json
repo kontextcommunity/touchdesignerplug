@@ -1,0 +1,21 @@
+{
+ "title": "Feedback trails (echo / smear)",
+ "tags": [
+  "feedback",
+  "trails",
+  "echo",
+  "смаз",
+  "шлейф",
+  "фидбэк"
+ ],
+ "description": "Classic TOP feedback loop that leaves fading trails behind a moving source.",
+ "acceptance": [
+  "moves continuously",
+  "trails fade out instead of saturating to white",
+  "no errors",
+  "1920x1080 output"
+ ],
+ "steps": "1. Source: any moving TOP (e.g. noiseTOP with an absTime-driven offset/translate, or a moving circleTOP) named src.\n2. feedbackTOP named fb_in, input = src (input only sets resolution/reset).\n3. compositeTOP named fb_mix with inputs [src, fb_in], operation add or over.\n4. levelTOP named fb_fade after fb_mix: lower opacity/brightness slightly (0.9-0.97) so trails decay.\n5. transformTOP named fb_transform after fb_fade: tiny scale (1.005-1.02) and/or rotate for drifting trails.\n6. nullTOP named fb_end after fb_transform. Set fb_in Target TOP parameter to fb_end.\n7. nullTOP out1 after fb_end.\nUse operator_info for the exact names of: composite operation menu, level opacity/brightness, transform scale/rotate, feedback target TOP.\nTune: decay (fb_fade), drift (fb_transform), source speed.",
+ "td_version": "2023+",
+ "author": "kontext."
+}

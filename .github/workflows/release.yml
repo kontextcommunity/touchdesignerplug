@@ -1,0 +1,23 @@
+# Каждый пуш в main публикует knowledge.zip как релиз — kontext.stage подтягивает его сам.
+name: knowledge release
+on:
+  push:
+    branches: [main]
+    paths: ['knowledge/**']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON
+        run: find knowledge -name '*.json' -print0 | xargs -0 -n1 python3 -m json.tool > /dev/null
+      - name: Pack
+        run: cd knowledge && zip -r ../knowledge.zip . -x '*.DS_Store' -x 'drafts/*'
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="kb-$(date -u +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}"
+          gh release create "$TAG" knowledge.zip --title "Knowledge $(date -u +%Y-%m-%d)" --notes "${{ github.event.head_commit.message }}" --latest
