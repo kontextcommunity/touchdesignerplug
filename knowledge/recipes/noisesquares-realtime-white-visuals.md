@@ -1,4 +1,4 @@
-# NoiseSquares — Realtime White Visuals: инструкция по туториалу
+# NoiseSquares — Realtime White Visuals: инструкция по туториалу (draft)
 
 - **Статус:** draft → built → verified → published
 - **Источник:** https://www.youtube.com/watch?v=8ABSC0gkJrU — Daniel Steenhoff, «Realtime White Visuals - TouchDesigner Tutorial (Beginner Friendly!)», 5:42, загружено 2024-04-05
