@@ -2,12 +2,12 @@
  {
   "name": "annotate1",
   "mode": "networkbox",
-  "title": "7 · Аудио: бас, громкость, верха, удар",
+  "title": "7 · Аудио: чтение звука внутри audio_reader, наружу 4 канала (bass, level, high, kick)",
   "body": "",
-  "x": -50,
-  "y": -1250,
-  "w": 1510,
-  "h": 720
+  "x": -40,
+  "y": -940,
+  "w": 860,
+  "h": 260
  },
  {
   "name": "annotate10",
@@ -23,11 +23,11 @@
   "name": "annotate11",
   "mode": "annotate",
   "title": "Что менять · аудио",
-  "body": "• audio_in.file — трек (mp3/wav). Сейчас пример из папки TouchDesigner. Звук идёт в audio_out_dev (volume 0–1).\n• Диапазоны полос (fromrange2 у *_norm): bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция.\n• Сглаживание (*_lag lag2, сек): bass 0.35, level 0.6, high 0.2. Больше — плавнее.\n• Удар: kick_trig threshup 0.75 (0.6–0.9), decay 0.25 сек.\nКуда идёт звук (выражения, менять множители):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick) — 0.82 базовый радиус.\n• Вспышка «звезды» на удар: math_len.preoff = −0.035*kick (0 … −0.1; больше — сильнее лучи).\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level.\n• Искры по верхам: pointsprite1.alpha = 0.35 + 0.35*high; bloom1.bloomintensity = 0.25 + 0.55*high + 0.4*kick.\n• Яркость: level_color.brightness1 = 1.3 + 0.5*level. Вращение шара: geo_ps.ry = absTime.seconds*5.\nНе трогать: имена audio_bass / audio_level / audio_high / audio_kick — на них ссылаются выражения.",
-  "x": 930,
-  "y": -1530,
-  "w": 520,
-  "h": 290
+  "body": "• Трек: audio_reader/audio_in.file (mp3/wav). Громкость: audio_reader/audio_out_dev.volume 0–1.\n• Сглаживание всех каналов: audio_smooth.width, сек: 0.02–0.5 (0.06). Filter / Lag CHOP добавлять ТОЛЬКО после audio_ctrl или audio — там 1 значение на кадр, это дёшево.\n• НЕ ставить Filter CHOP внутри audio_reader до *_rms: там звук 44 100 значений в секунду, фильтр шириной в секунды подвешивает проект.\n• Чувствительность: audio_reader/*_norm fromrange2 — bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция. Удар: kick_trig threshup 0.75 (0.6–0.9).\nКуда идёт звук (менять множители в выражениях):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick)\n• Вспышки «звезды»: math_len.preoff = −0.035*kick (0 … −0.1)\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level\n• Искры и свечение по верхам: pointsprite1.alpha, bloom1.bloomintensity; яркость level_color.brightness1\nНе трогать: имя audio и каналы bass / level / high / kick — на них ссылаются выражения.",
+  "x": 630,
+  "y": -1210,
+  "w": 340,
+  "h": 270
  },
  {
   "name": "annotate2",

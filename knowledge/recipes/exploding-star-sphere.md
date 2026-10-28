@@ -116,14 +116,20 @@ void main(){
 
 **Крупнее:** `math_len.gain` 1 (радиус 1), `camera1.tz` 5.4 — шар около 80% высоты кадра.
 
-**Аудио-цепочка** (блок «7 · Аудио»):
+**Аудио-цепочка** (блок «7 · Аудио»). Весь звук читается внутри Base COMP `audio_reader`, наружу выходят только 4 управляющих канала, 1 значение на кадр:
 ```
-audio_in (audiofileinCHOP, playmode sequential, repeat) → audio_out_dev (звук наружу)
-audio_in → bass_filt (lowpass 150 Гц) → bass_rms (analyze rmspower) → bass_lag (0.02 / 0.35 с) → bass_norm (0.05…0.42 → 0…1) → bass_clamp → audio_bass
-audio_in → level_rms → level_lag (0.05 / 0.6) → level_norm (0.05…0.42) → level_clamp → audio_level
-audio_in → high_filt (highpass 4000 Гц) → high_rms → high_lag (0.01 / 0.2) → high_norm (0.006…0.07) → high_clamp → audio_high
-bass_rms → kick_lag (0 / 0.06) → kick_norm (0.18…0.4) → kick_trig (threshup 0.75, down 0.4, attack 0, decay 0.25) → audio_kick
+audio_reader/ (Base COMP — внутри звук 44.1 кГц)
+  audio_in (audiofileinCHOP, sequential, repeat) → audio_out_dev (звук наружу, volume 0.8)
+  audio_in → bass_filt (lowpass 150 Гц) → bass_rms (analyze rmspower) → bass_mono (math avg) → bass_lag (0.02 / 0.35 с) → bass_norm (0.05…0.42 → 0…1) → bass_clamp → bass_name
+  audio_in → level_filt → level_rms → … → level_lag (0.05 / 0.6) → level_norm (0.05…0.42) → level_name
+  audio_in → high_filt (highpass 4000 Гц) → high_rms → … → high_lag (0.01 / 0.2) → high_norm (0.006…0.07) → high_name
+  bass_mono → kick_lag (0 / 0.06) → kick_norm (0.18…0.4) → kick_trig (threshup 0.75, down 0.4, attack 0, decay 0.25) → kick_name
+  merge_ctrl → out_ctrl (Out CHOP)
+audio_reader → audio_ctrl (null) → audio_smooth (Filter CHOP, gauss, width 0.06 с) → audio (null: bass, level, high, kick)
 ```
+Все выражения берут `op('audio')['bass']`, `['level']`, `['high']`, `['kick']`.
+
+**Почему так:** Filter CHOP, поставленный на сырой звук (`audio_in`, 44 100 значений в секунду, 735 на кадр), считает свёртку по всем сэмплам каждый кадр. При ширине фильтра в доли секунды и больше проект подвисает. После `*_rms` и Analyze остаётся одно значение на кадр, и Filter / Lag на нём почти бесплатный (замер: Filter width 1 с на `audio` — 0.34 мс, ~58 fps). Поэтому любые новые Filter / Lag / Math ставить после `audio_ctrl` или `audio`, а не внутри `audio_reader`.
 
 | Куда | Выражение | Что менять |
 |---|---|---|
@@ -135,7 +141,7 @@ bass_rms → kick_lag (0 / 0.06) → kick_norm (0.18…0.4) → kick_trig (thres
 | Яркость | `level_color.brightness1 = 1.3 + 0.5*level` | — |
 | Вращение | `geo_ps.ry = absTime.seconds*5`, `geo_ps.rx = math.sin(absTime.seconds*0.13)*12` | множители |
 
-Где `bass = op('audio_bass')[0]` и так далее. Диапазоны `*_norm` подобраны под пример из папки TouchDesigner (`Audio/JeremyCaulfield…mp3`). Для своего трека смотреть пики `*_rms` и ставить `fromrange2` чуть ниже пика. Первая версия с `preoff = -0.10*kick` и радиусом 1.18 выбрасывала частицы далеко за кадр (кадр `08` снят уже после правки).
+Где `bass = op('audio')['bass']` и так далее. Общее сглаживание — `audio_smooth.width` (0.02–0.5 с). Диапазоны `audio_reader/*_norm` подобраны под пример из папки TouchDesigner (`Audio/JeremyCaulfield…mp3`). Для своего трека смотреть пики `audio_reader/*_rms` и ставить `fromrange2` чуть ниже пика. Первая версия с `preoff = -0.10*kick` и радиусом 1.18 выбрасывала частицы далеко за кадр (кадр `08` снят уже после правки).
 
 ## 5. Отклонения от видео
 - Life автора недоступен, заменён GLSL `life_pos` (блок 5). Как именно его компонент перерождает частицы, по видео не видно.

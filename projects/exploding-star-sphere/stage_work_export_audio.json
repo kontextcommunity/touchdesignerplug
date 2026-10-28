@@ -56,6 +56,19 @@
    ]
   },
   {
+   "name": "audio",
+   "type": "nullCHOP",
+   "x": 650,
+   "y": -900,
+   "inputs": [
+    [
+     0,
+     "audio_smooth",
+     0
+    ]
+   ]
+  },
+  {
    "name": "over1",
    "type": "overTOP",
    "x": 3490,
@@ -110,7 +123,7 @@
     "preblacklevel": 0.7,
     "bloomthreshold": 0.5,
     "bloomintensity": {
-     "expr": "0.25 + 0.55*op('audio_high')[0] + 0.4*op('audio_kick')[0]"
+     "expr": "0.25 + 0.55*op('audio')['high'] + 0.4*op('audio')['kick']"
     },
     "outputresolution": "half",
     "resolutionw": 1920,
@@ -328,52 +341,6 @@
    }
   },
   {
-   "name": "audio_in",
-   "type": "audiofileinCHOP",
-   "x": -10,
-   "y": -910,
-   "params": {
-    "file": {
-     "expr": "app.samplesFolder + '/Audio/JeremyCaulfield_www.dumb-unit.com.mp3'"
-    },
-    "timeslice": true
-   }
-  },
-  {
-   "name": "bass_lag",
-   "type": "lagCHOP",
-   "x": 490,
-   "y": -910,
-   "params": {
-    "lag1": 0.02,
-    "lag2": 0.35,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "bass_rms",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "bass_rms",
-   "type": "analyzeCHOP",
-   "x": 340,
-   "y": -910,
-   "params": {
-    "function": "rmspower"
-   },
-   "inputs": [
-    [
-     0,
-     "bass_filt",
-     0
-    ]
-   ]
-  },
-  {
    "name": "comp_div",
    "type": "compositeTOP",
    "x": 2650,
@@ -398,58 +365,6 @@
     [
      1,
      "math_len",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "high_lag",
-   "type": "lagCHOP",
-   "x": 490,
-   "y": -1210,
-   "params": {
-    "lag1": 0.01,
-    "lag2": 0.2,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "high_rms",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "high_rms",
-   "type": "analyzeCHOP",
-   "x": 340,
-   "y": -1210,
-   "params": {
-    "function": "rmspower"
-   },
-   "inputs": [
-    [
-     0,
-     "high_filt",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "kick_lag",
-   "type": "lagCHOP",
-   "x": 890,
-   "y": -760,
-   "params": {
-    "lag1": 0.0,
-    "lag2": 0.06,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "bass_rms",
      0
     ]
    ]
@@ -503,10 +418,10 @@
     "chanop": "len",
     "inputmask": "7",
     "preoff": {
-     "expr": "-0.035*op('audio_kick')[0]"
+     "expr": "-0.035*op('audio')['kick']"
     },
     "gain": {
-     "expr": "1/(0.82 + 0.08*op('audio_bass')[0] + 0.05*op('audio_kick')[0])"
+     "expr": "1/(0.82 + 0.08*op('audio')['bass'] + 0.05*op('audio')['kick'])"
     },
     "outputresolution": "custom",
     "resolutionw": {
@@ -557,8 +472,8 @@
   {
    "name": "annotate1",
    "type": "annotateCOMP",
-   "x": -50,
-   "y": -1250,
+   "x": -40,
+   "y": -940,
    "params": {
     "pageindex": 3,
     "opviewer": "/project1/stage_work/annotate1/annotation",
@@ -575,7 +490,7 @@
     "clone": {
      "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
     },
-    "Titletext": "7 · Аудио: бас, громкость, верха, удар",
+    "Titletext": "7 · Аудио: чтение звука внутри audio_reader, наружу 4 канала (bass, level, high, kick)",
     "Mode": "networkbox",
     "Backcolorr": 0.2,
     "Backcolorg": 0.34,
@@ -2943,41 +2858,6 @@
    ]
   },
   {
-   "name": "bass_filt",
-   "type": "audiofilterCHOP",
-   "x": 190,
-   "y": -910,
-   "params": {
-    "units": "frequency",
-    "cutofffrequency": 150.0,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "audio_in",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "bass_norm",
-   "type": "mathCHOP",
-   "x": 640,
-   "y": -910,
-   "params": {
-    "fromrange1": 0.05,
-    "fromrange2": 0.42
-   },
-   "inputs": [
-    [
-     0,
-     "bass_lag",
-     0
-    ]
-   ]
-  },
-  {
    "name": "constant1",
    "type": "constantCHOP",
    "x": 400,
@@ -2988,119 +2868,10 @@
    }
   },
   {
-   "name": "high_filt",
-   "type": "audiofilterCHOP",
-   "x": 190,
-   "y": -1210,
-   "params": {
-    "filter": "highpass",
-    "units": "frequency",
-    "cutofffrequency": 4000.0,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "audio_in",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "high_norm",
-   "type": "mathCHOP",
-   "x": 640,
-   "y": -1210,
-   "params": {
-    "fromrange1": 0.006,
-    "fromrange2": 0.07
-   },
-   "inputs": [
-    [
-     0,
-     "high_lag",
-     0
-    ]
-   ]
-  },
-  {
    "name": "key_reset",
    "type": "keyboardinCHOP",
    "x": 1440,
    "y": 100
-  },
-  {
-   "name": "kick_norm",
-   "type": "mathCHOP",
-   "x": 1040,
-   "y": -760,
-   "params": {
-    "fromrange1": 0.18,
-    "fromrange2": 0.4
-   },
-   "inputs": [
-    [
-     0,
-     "kick_lag",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "kick_trig",
-   "type": "triggerCHOP",
-   "x": 1140,
-   "y": -910,
-   "params": {
-    "threshup": 0.75,
-    "threshdown": 0.4,
-    "attack": 0.0,
-    "decay": 0.25,
-    "sustain": 0.0,
-    "release": 0.15,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "kick_norm",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "level_lag",
-   "type": "lagCHOP",
-   "x": 490,
-   "y": -1060,
-   "params": {
-    "lag1": 0.05,
-    "lag2": 0.6,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "level_rms",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "level_rms",
-   "type": "analyzeCHOP",
-   "x": 340,
-   "y": -1060,
-   "params": {
-    "function": "rmspower"
-   },
-   "inputs": [
-    [
-     0,
-     "audio_in",
-     0
-    ]
-   ]
   },
   {
    "name": "math_step",
@@ -3109,7 +2880,7 @@
    "y": 400,
    "params": {
     "gain": {
-     "expr": "0.0008 + 0.0035*op('audio_level')[0]"
+     "expr": "0.0008 + 0.0035*op('audio')['level']"
     },
     "outputresolution": "custom",
     "resolutionw": {
@@ -3428,8 +3199,8 @@
   {
    "name": "annotate11",
    "type": "annotateCOMP",
-   "x": 930,
-   "y": -1530,
+   "x": 630,
+   "y": -1210,
    "params": {
     "pageindex": 3,
     "opviewer": "/project1/stage_work/annotate11/annotation",
@@ -3447,7 +3218,7 @@
      "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
     },
     "Titletext": "Что менять · аудио",
-    "Bodytext": "• audio_in.file — трек (mp3/wav). Сейчас пример из папки TouchDesigner. Звук идёт в audio_out_dev (volume 0–1).\n• Диапазоны полос (fromrange2 у *_norm): bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция.\n• Сглаживание (*_lag lag2, сек): bass 0.35, level 0.6, high 0.2. Больше — плавнее.\n• Удар: kick_trig threshup 0.75 (0.6–0.9), decay 0.25 сек.\nКуда идёт звук (выражения, менять множители):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick) — 0.82 базовый радиус.\n• Вспышка «звезды» на удар: math_len.preoff = −0.035*kick (0 … −0.1; больше — сильнее лучи).\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level.\n• Искры по верхам: pointsprite1.alpha = 0.35 + 0.35*high; bloom1.bloomintensity = 0.25 + 0.55*high + 0.4*kick.\n• Яркость: level_color.brightness1 = 1.3 + 0.5*level. Вращение шара: geo_ps.ry = absTime.seconds*5.\nНе трогать: имена audio_bass / audio_level / audio_high / audio_kick — на них ссылаются выражения.",
+    "Bodytext": "• Трек: audio_reader/audio_in.file (mp3/wav). Громкость: audio_reader/audio_out_dev.volume 0–1.\n• Сглаживание всех каналов: audio_smooth.width, сек: 0.02–0.5 (0.06). Filter / Lag CHOP добавлять ТОЛЬКО после audio_ctrl или audio — там 1 значение на кадр, это дёшево.\n• НЕ ставить Filter CHOP внутри audio_reader до *_rms: там звук 44 100 значений в секунду, фильтр шириной в секунды подвешивает проект.\n• Чувствительность: audio_reader/*_norm fromrange2 — bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция. Удар: kick_trig threshup 0.75 (0.6–0.9).\nКуда идёт звук (менять множители в выражениях):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick)\n• Вспышки «звезды»: math_len.preoff = −0.035*kick (0 … −0.1)\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level\n• Искры и свечение по верхам: pointsprite1.alpha, bloom1.bloomintensity; яркость level_color.brightness1\nНе трогать: имя audio и каналы bass / level / high / kick — на них ссылаются выражения.",
     "Mode": "annotate",
     "Backcolorr": 0.25,
     "Backcolorg": 0.25,
@@ -3692,91 +3463,14 @@
    ]
   },
   {
-   "name": "audio_bass",
+   "name": "audio_ctrl",
    "type": "nullCHOP",
-   "x": 940,
-   "y": -910,
+   "x": 250,
+   "y": -900,
    "inputs": [
     [
      0,
-     "bass_clamp",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "audio_high",
-   "type": "nullCHOP",
-   "x": 940,
-   "y": -1210,
-   "inputs": [
-    [
-     0,
-     "high_clamp",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "audio_kick",
-   "type": "nullCHOP",
-   "x": 1290,
-   "y": -910,
-   "inputs": [
-    [
-     0,
-     "kick_trig",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "bass_clamp",
-   "type": "limitCHOP",
-   "x": 790,
-   "y": -910,
-   "params": {
-    "type": "clamp",
-    "min": 0.0
-   },
-   "inputs": [
-    [
-     0,
-     "bass_norm",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "high_clamp",
-   "type": "limitCHOP",
-   "x": 790,
-   "y": -1210,
-   "params": {
-    "type": "clamp",
-    "min": 0.0
-   },
-   "inputs": [
-    [
-     0,
-     "high_norm",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "level_norm",
-   "type": "mathCHOP",
-   "x": 640,
-   "y": -1060,
-   "params": {
-    "fromrange1": 0.05,
-    "fromrange2": 0.42
-   },
-   "inputs": [
-    [
-     0,
-     "level_lag",
+     "audio_reader",
      0
     ]
    ]
@@ -3902,43 +3596,13 @@
    ]
   },
   {
-   "name": "audio_level",
-   "type": "nullCHOP",
-   "x": 940,
-   "y": -1060,
-   "inputs": [
-    [
-     0,
-     "level_clamp",
-     0
-    ]
-   ]
-  },
-  {
-   "name": "level_clamp",
-   "type": "limitCHOP",
-   "x": 790,
-   "y": -1060,
-   "params": {
-    "type": "clamp",
-    "min": 0.0
-   },
-   "inputs": [
-    [
-     0,
-     "level_norm",
-     0
-    ]
-   ]
-  },
-  {
    "name": "level_color",
    "type": "levelTOP",
    "x": 3090,
    "y": 1000,
    "params": {
     "brightness1": {
-     "expr": "1.3 + 0.5*op('audio_level')[0]"
+     "expr": "1.3 + 0.5*op('audio')['level']"
     },
     "highr": 0.82,
     "highb": 0.8
@@ -3980,35 +3644,523 @@
    ]
   },
   {
+   "name": "audio_reader",
+   "type": "baseCOMP",
+   "x": 0,
+   "y": -900,
+   "children": [
+    {
+     "name": "audio_in",
+     "type": "audiofileinCHOP",
+     "x": 0,
+     "y": 0,
+     "params": {
+      "file": {
+       "expr": "app.samplesFolder + '/Audio/JeremyCaulfield_www.dumb-unit.com.mp3'"
+      },
+      "timeslice": true
+     }
+    },
+    {
+     "name": "bass_lag",
+     "type": "lagCHOP",
+     "x": 650,
+     "y": 0,
+     "params": {
+      "lag1": 0.02,
+      "lag2": 0.35,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "bass_mono",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_rms",
+     "type": "analyzeCHOP",
+     "x": 350,
+     "y": 0,
+     "params": {
+      "function": "rmspower"
+     },
+     "inputs": [
+      [
+       0,
+       "bass_filt",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_lag",
+     "type": "lagCHOP",
+     "x": 650,
+     "y": -300,
+     "params": {
+      "lag1": 0.01,
+      "lag2": 0.2,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "high_mono",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_rms",
+     "type": "analyzeCHOP",
+     "x": 350,
+     "y": -300,
+     "params": {
+      "function": "rmspower"
+     },
+     "inputs": [
+      [
+       0,
+       "high_filt",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "kick_lag",
+     "type": "lagCHOP",
+     "x": 650,
+     "y": -450,
+     "params": {
+      "lag1": 0.0,
+      "lag2": 0.06,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "bass_mono",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "out_ctrl",
+     "type": "outCHOP",
+     "x": 1400,
+     "y": -200,
+     "inputs": [
+      [
+       0,
+       "merge_ctrl",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_filt",
+     "type": "audiofilterCHOP",
+     "x": 200,
+     "y": 0,
+     "params": {
+      "units": "frequency",
+      "cutofffrequency": 150.0,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "audio_in",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_mono",
+     "type": "mathCHOP",
+     "x": 500,
+     "y": 0,
+     "params": {
+      "chanop": "avg"
+     },
+     "inputs": [
+      [
+       0,
+       "bass_rms",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_name",
+     "type": "renameCHOP",
+     "x": 1100,
+     "y": 0,
+     "params": {
+      "renameto": "bass"
+     },
+     "inputs": [
+      [
+       0,
+       "bass_clamp",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_norm",
+     "type": "mathCHOP",
+     "x": 800,
+     "y": 0,
+     "params": {
+      "fromrange1": 0.05,
+      "fromrange2": 0.42
+     },
+     "inputs": [
+      [
+       0,
+       "bass_lag",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_filt",
+     "type": "audiofilterCHOP",
+     "x": 200,
+     "y": -300,
+     "params": {
+      "filter": "highpass",
+      "units": "frequency",
+      "cutofffrequency": 4000.0,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "audio_in",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_mono",
+     "type": "mathCHOP",
+     "x": 500,
+     "y": -300,
+     "params": {
+      "chanop": "avg"
+     },
+     "inputs": [
+      [
+       0,
+       "high_rms",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_name",
+     "type": "renameCHOP",
+     "x": 1100,
+     "y": -300,
+     "params": {
+      "renameto": "high"
+     },
+     "inputs": [
+      [
+       0,
+       "high_clamp",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_norm",
+     "type": "mathCHOP",
+     "x": 800,
+     "y": -300,
+     "params": {
+      "fromrange1": 0.006,
+      "fromrange2": 0.07
+     },
+     "inputs": [
+      [
+       0,
+       "high_lag",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "kick_name",
+     "type": "renameCHOP",
+     "x": 1100,
+     "y": -450,
+     "params": {
+      "renameto": "kick"
+     },
+     "inputs": [
+      [
+       0,
+       "kick_trig",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "kick_norm",
+     "type": "mathCHOP",
+     "x": 800,
+     "y": -450,
+     "params": {
+      "fromrange1": 0.18,
+      "fromrange2": 0.4
+     },
+     "inputs": [
+      [
+       0,
+       "kick_lag",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "kick_trig",
+     "type": "triggerCHOP",
+     "x": 950,
+     "y": -450,
+     "params": {
+      "threshup": 0.75,
+      "threshdown": 0.4,
+      "attack": 0.0,
+      "decay": 0.25,
+      "sustain": 0.0,
+      "release": 0.15,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "kick_norm",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_lag",
+     "type": "lagCHOP",
+     "x": 650,
+     "y": -150,
+     "params": {
+      "lag1": 0.05,
+      "lag2": 0.6,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "level_mono",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_rms",
+     "type": "analyzeCHOP",
+     "x": 350,
+     "y": -150,
+     "params": {
+      "function": "rmspower"
+     },
+     "inputs": [
+      [
+       0,
+       "audio_in",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "bass_clamp",
+     "type": "limitCHOP",
+     "x": 950,
+     "y": 0,
+     "params": {
+      "type": "clamp",
+      "min": 0.0
+     },
+     "inputs": [
+      [
+       0,
+       "bass_norm",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "high_clamp",
+     "type": "limitCHOP",
+     "x": 950,
+     "y": -300,
+     "params": {
+      "type": "clamp",
+      "min": 0.0
+     },
+     "inputs": [
+      [
+       0,
+       "high_norm",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_mono",
+     "type": "mathCHOP",
+     "x": 500,
+     "y": -150,
+     "params": {
+      "chanop": "avg"
+     },
+     "inputs": [
+      [
+       0,
+       "level_rms",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_name",
+     "type": "renameCHOP",
+     "x": 1100,
+     "y": -150,
+     "params": {
+      "renameto": "level"
+     },
+     "inputs": [
+      [
+       0,
+       "level_clamp",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_norm",
+     "type": "mathCHOP",
+     "x": 800,
+     "y": -150,
+     "params": {
+      "fromrange1": 0.05,
+      "fromrange2": 0.42
+     },
+     "inputs": [
+      [
+       0,
+       "level_lag",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "merge_ctrl",
+     "type": "mergeCHOP",
+     "x": 1250,
+     "y": -200,
+     "inputs": [
+      [
+       0,
+       "bass_name",
+       0
+      ],
+      [
+       1,
+       "level_name",
+       0
+      ],
+      [
+       2,
+       "high_name",
+       0
+      ],
+      [
+       3,
+       "kick_name",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "level_clamp",
+     "type": "limitCHOP",
+     "x": 950,
+     "y": -150,
+     "params": {
+      "type": "clamp",
+      "min": 0.0
+     },
+     "inputs": [
+      [
+       0,
+       "level_norm",
+       0
+      ]
+     ]
+    },
+    {
+     "name": "audio_out_dev",
+     "type": "audiodeviceoutCHOP",
+     "x": 0,
+     "y": 200,
+     "params": {
+      "volume": 0.8,
+      "timeslice": true
+     },
+     "inputs": [
+      [
+       0,
+       "audio_in",
+       0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "audio_smooth",
+   "type": "filterCHOP",
+   "x": 450,
+   "y": -900,
+   "params": {
+    "width": 0.06,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_ctrl",
+     0
+    ]
+   ]
+  },
+  {
    "name": "pointsprite1",
    "type": "pointspriteMAT",
    "x": 2450,
    "y": 1380,
    "params": {
     "alpha": {
-     "expr": "0.35 + 0.35*op('audio_high')[0]"
+     "expr": "0.35 + 0.35*op('audio')['high']"
     },
     "blending": true,
     "srcblend": "sa",
     "destblend": "one"
    }
-  },
-  {
-   "name": "audio_out_dev",
-   "type": "audiodeviceoutCHOP",
-   "x": 190,
-   "y": -710,
-   "params": {
-    "volume": 0.8,
-    "timeslice": true
-   },
-   "inputs": [
-    [
-     0,
-     "audio_in",
-     0
-    ]
-   ]
   },
   {
    "name": "life_pos_info",
