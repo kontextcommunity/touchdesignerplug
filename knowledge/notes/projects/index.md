@@ -14,6 +14,7 @@
 | Хроматические Частицы | B 3D geo | particle SOP → feedback → mirror → rgbaDelay | 5 каналов | 9990 | chromatic-particles |
 | Hexagon Instancing | B 3D geo | copy SOP → instancing → render | нет | 9988 | hexagon-instancing |
 | 3D Audio-Reactive Noise Blob | 3D audio | sphere SOP + noise SOP + PBR + bloom | rms | — | audio-reactive-blob |
+| Exploding Star (частицы на сфере) | B 3D geo / GPU | позиции в TOP-петле (feedback + noise derivative) → нормализация на сферу после петли → point sprites | нет (аудио-версия — в работе) | — | exploding-star-sphere |
 
 Группы:
 - A — 2D noise + feedback: noise(s) → edge/blur → composite → feedback → color/level → output.

@@ -1,0 +1,641 @@
+{
+ "root": "/project1/stage_work",
+ "td_build": "099",
+ "fps": 60.0,
+ "note": "annotateCOMP = клон /sys/TDTox/TDAnnotate/annotate; annotate.ops = операторы внутри рамки. inputs = [вход_индекс, имя_источника, выход_индекс]",
+ "nodes": [
+  {
+   "name": "bg1",
+   "type": "constant",
+   "x": 1000,
+   "y": 1100,
+   "family": "TOP",
+   "params": {
+    "colorr": 0.02,
+    "colorg": 0.02,
+    "colorb": 0.035,
+    "outputresolution": "custom",
+    "resolutionw": 1920,
+    "resolutionh": 1080
+   }
+  },
+  {
+   "name": "pos",
+   "type": "null",
+   "x": 500,
+   "y": 0,
+   "family": "TOP",
+   "inputs": [
+    [
+     0,
+     "pos_sim",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "out1",
+   "type": "null",
+   "x": 1500,
+   "y": 900,
+   "family": "TOP",
+   "inputs": [
+    [
+     0,
+     "over1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "over1",
+   "type": "over",
+   "x": 1250,
+   "y": 900,
+   "family": "TOP",
+   "inputs": [
+    [
+     0,
+     "bloom1",
+     0
+    ],
+    [
+     1,
+     "bg1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "bloom1",
+   "type": "bloom",
+   "x": 1000,
+   "y": 900,
+   "family": "TOP",
+   "params": {
+    "preblacklevel": 0.0,
+    "minbloomradius": 0.3,
+    "maxbloomradius": 2.0,
+    "bloomthreshold": 0.5,
+    "bloomfill": 0.5,
+    "bloomintensity": {
+     "expr": "0.25 + op('audio_out')['chan1'] * 0.75"
+    }
+   },
+   "inputs": [
+    [
+     0,
+     "level_color",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "fb_pos",
+   "type": "feedback",
+   "x": 0,
+   "y": 200,
+   "family": "TOP",
+   "params": {
+    "top": "/project1/stage_work/fb_src",
+    "reset": {
+     "expr": "op('key_reset')['k1']"
+    },
+    "outputresolution": "custom",
+    "resolutionw": 200,
+    "resolutionh": 200,
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "seed_pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "fb_src",
+   "type": "null",
+   "x": 250,
+   "y": 200,
+   "family": "TOP",
+   "inputs": [
+    [
+     0,
+     "pos_sim",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "geo_ps",
+   "type": "geo",
+   "x": 0,
+   "y": 900,
+   "family": "COMP",
+   "params": {
+    "instancing": true,
+    "instancecountmode": "manual",
+    "numinstances": 40000,
+    "instancetop": "/project1/stage_work/pos",
+    "instancetx": "r",
+    "instancety": "g",
+    "instancetz": "b",
+    "material": "/project1/stage_work/mat_dot"
+   },
+   "children": [
+    {
+     "name": "disc1",
+     "type": "circle",
+     "x": 0,
+     "y": 0,
+     "family": "SOP",
+     "params": {
+      "radx": 0.012,
+      "rady": 0.012,
+      "divs": 8,
+      "texture": "off",
+      "normals": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "camera1",
+   "type": "cam",
+   "x": 250,
+   "y": 900,
+   "family": "COMP",
+   "params": {
+    "tx": 0.0,
+    "ty": 0.0,
+    "tz": 3.4,
+    "rx": {
+     "expr": "math.sin(absTime.seconds * 0.07) * 4"
+    },
+    "ry": {
+     "expr": "math.sin(absTime.seconds * 0.1) * 8"
+    },
+    "rz": 0.0
+   }
+  },
+  {
+   "name": "mat_dot",
+   "type": "constant",
+   "x": -250,
+   "y": 900,
+   "family": "MAT",
+   "params": {
+    "colorr": 0.25,
+    "colorg": 0.6,
+    "colorb": 1.0,
+    "alpha": {
+     "expr": "0.30 + op('audio_out')['chan1'] * 0.45"
+    },
+    "blending": true
+   }
+  },
+  {
+   "name": "pos_sim",
+   "type": "glsl",
+   "x": 250,
+   "y": 0,
+   "family": "TOP",
+   "params": {
+    "pixeldat": "/project1/stage_work/pos_sim_pixel",
+    "premultrgbbyalpha": false,
+    "vec0name": "uSphere",
+    "vec0valuex": 1.0,
+    "vec0valuey": {
+     "expr": "0.004 + op('audio_out')['chan1'] * 0.05"
+    },
+    "vec0valuez": 1.6,
+    "vec0valuew": 0.0,
+    "outputresolution": "custom",
+    "resolutionw": 200,
+    "resolutionh": 200,
+    "format": "rgba32float",
+    "const1value": 12.0,
+    "const2value": 1.0,
+    "const3value": 0.1,
+    "const4value": 0.22,
+    "const5value": 0.9,
+    "vec1name": "uMotion",
+    "vec1valuex": {
+     "expr": "0.010 + op('audio_out')['chan1'] * 0.06"
+    },
+    "vec1valuey": {
+     "expr": "0.06 + op('audio_out')['chan1'] * 0.30"
+    },
+    "vec1valuez": 1.0,
+    "vec1valuew": 0.0,
+    "vec2name": "uClock",
+    "vec2valuex": {
+     "expr": "math.fmod(absTime.seconds, 1000)"
+    },
+    "vec2valuey": 0.0,
+    "vec2valuez": 0.0,
+    "vec2valuew": 0.0
+   },
+   "inputs": [
+    [
+     0,
+     "fb_pos",
+     0
+    ],
+    [
+     1,
+     "seed_pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "render1",
+   "type": "render",
+   "x": 500,
+   "y": 900,
+   "family": "TOP",
+   "params": {
+    "camera": "/project1/stage_work/camera1",
+    "geometry": "/project1/stage_work/geo_ps",
+    "antialias": "aa1",
+    "resolutionw": 1920,
+    "resolutionh": 1080
+   }
+  },
+  {
+   "name": "seed_pos",
+   "type": "glsl",
+   "x": 0,
+   "y": 0,
+   "family": "TOP",
+   "params": {
+    "pixeldat": "/project1/stage_work/seed_pos_pixel",
+    "premultrgbbyalpha": false,
+    "vec0name": "uSeed",
+    "vec0valuex": 0.1,
+    "vec0valuey": 1.0,
+    "vec0valuez": 0.0,
+    "vec0valuew": 0.0,
+    "const0name": "uTubeRad",
+    "const0value": 0.1,
+    "outputresolution": "custom",
+    "resolutionw": 200,
+    "resolutionh": 200,
+    "format": "rgba32float"
+   }
+  },
+  {
+   "name": "annotate1",
+   "type": "annotateCOMP",
+   "x": -40,
+   "y": -840,
+   "annotate": {
+    "kind": "networkbox",
+    "title": "1 · Аудио",
+    "body": "",
+    "ops": [
+     "audiofilein1",
+     "audiodevout1",
+     "audio_level",
+     "audio_smooth",
+     "audio_norm",
+     "audio_limit",
+     "audio_out"
+    ],
+    "color": [
+     0.2,
+     0.34,
+     0.24
+    ]
+   }
+  },
+  {
+   "name": "annotate2",
+   "type": "annotateCOMP",
+   "x": -290,
+   "y": -200,
+   "annotate": {
+    "kind": "networkbox",
+    "title": "2 · Симуляция частиц (GPU)",
+    "body": "",
+    "ops": [
+     "seed_pos",
+     "seed_pos_pixel",
+     "fb_pos",
+     "pos_sim",
+     "pos_sim_pixel",
+     "fb_src",
+     "pos",
+     "key_reset"
+    ],
+    "color": [
+     0.2,
+     0.34,
+     0.36
+    ]
+   }
+  },
+  {
+   "name": "annotate3",
+   "type": "annotateCOMP",
+   "x": -290,
+   "y": 460,
+   "annotate": {
+    "kind": "networkbox",
+    "title": "3 · 3D и рендер (инстансинг точек)",
+    "body": "",
+    "ops": [
+     "geo_ps",
+     "camera1",
+     "mat_dot",
+     "render1"
+    ],
+    "color": [
+     0.22,
+     0.28,
+     0.42
+    ]
+   }
+  },
+  {
+   "name": "annotate4",
+   "type": "annotateCOMP",
+   "x": 710,
+   "y": 460,
+   "annotate": {
+    "kind": "networkbox",
+    "title": "4 · Свет и цвет",
+    "body": "",
+    "ops": [
+     "level_color",
+     "bloom1",
+     "bg1"
+    ],
+    "color": [
+     0.42,
+     0.33,
+     0.2
+    ]
+   }
+  },
+  {
+   "name": "annotate5",
+   "type": "annotateCOMP",
+   "x": 1460,
+   "y": 460,
+   "annotate": {
+    "kind": "networkbox",
+    "title": "5 · Выход",
+    "body": "",
+    "ops": [
+     "over1",
+     "out1"
+    ],
+    "color": [
+     0.4,
+     0.24,
+     0.4
+    ]
+   }
+  },
+  {
+   "name": "annotate6",
+   "type": "annotateCOMP",
+   "x": 730,
+   "y": -830,
+   "annotate": {
+    "kind": "annotate",
+    "title": "Что менять · аудио",
+    "body": "• audiofilein1.file — путь к треку (mp3/wav), кнопка Play рядом\n• audio_norm.fromrange1 / fromrange2 — диапазон громкости: 0.15–0.85 (сейчас 0.25–0.8); больше диапазон — меньше реакции\n• audio_smooth.width — сглаживание: 0.05–0.5 с (сейчас 0.15); больше = плавнее, «ватнее»\n• audiodevout1.volume — громкость на выходе, 0–1\nСигнал для нод: audio_out['chan1'] — 0..1.\nНе трогать: audio_out, audio_limit — на них ссылаются выражения шейдера.",
+    "ops": [],
+    "color": [
+     0.25,
+     0.25,
+     0.27
+    ]
+   }
+  },
+  {
+   "name": "annotate7",
+   "type": "annotateCOMP",
+   "x": 230,
+   "y": -290,
+   "annotate": {
+    "kind": "annotate",
+    "title": "Что менять · частицы",
+    "body": "• seed_pos пара «Vectors» uSeed Value X — радиус стартовой трубки: 0.05–0.5 (0.1)\n• seed_pos uSeed Value Y — высота трубки: 0.2–2 (1.0)\n• pos_sim uSphere Value X — радиус сферы: 0.5–1.8 (1.0)\n• pos_sim uSphere Value Z — масштаб шума: 0.5–4 (1.6); больше = мельче узор\n• pos_sim uMotion Value Z — вращение: 0–5 (1.0)\n• pos_sim uSphere Value Y (притяжение к сфере) и uMotion Value X/Y (поток и «дыхание») заданы выражениями от audio_out['chan1'] — менять множители в этих выражениях, не значения\n• key_reset — нажать клавишу 1, чтобы пересобрать частицы с нуля\n• pos_sim.vec1valuez = 1.0 → на resolutionw/h 200×200 = 40 000 частиц\nНе трогать: fb_pos, fb_src (петля задержки), pos_sim_pixel / seed_pos_pixel (код шейдера), pos (на него смотрит инстансинг).",
+    "ops": [],
+    "color": [
+     0.25,
+     0.25,
+     0.27
+    ]
+   }
+  },
+  {
+   "name": "annotate8",
+   "type": "annotateCOMP",
+   "x": -20,
+   "y": 250,
+   "annotate": {
+    "kind": "annotate",
+    "title": "Что менять · 3D и точки",
+    "body": "• geo_ps.numinstances — число точек: 1000–40000 (40000), должно совпадать с 200×200 текслей в pos\n• geo_ps/disc1.radx + rady — размер точки: 0.005–0.03 (0.012); больше = плотнее и ярче\n• camera1.tz — дистанция: 2–6 (3.4)\n• camera1.rx / ry — покачивание камеры, выражения sin(absTime.seconds*0.07)*4 и *0.1*8; менять множитель угла\n• mat_dot.colorr/colorg/colorb — цвет точки RGB 0–1 (0.25 / 0.6 / 1.0)\n• mat_dot.alpha — плотность точки 0–1, задана выражением от audio_out['chan1']\nНе трогать: pos (источник позиций инстансов), mat_dot.blending/destblend — настроены под аддитивное свечение.",
+    "ops": [],
+    "color": [
+     0.25,
+     0.25,
+     0.27
+    ]
+   }
+  },
+  {
+   "name": "annotate9",
+   "type": "annotateCOMP",
+   "x": 730,
+   "y": 670,
+   "annotate": {
+    "kind": "annotate",
+    "title": "Что менять · свечение и выход",
+    "body": "• level_color.brightness1 — общая яркость точек: 0.5–2.0 (сейчас 0.85), больше = светлее\n• bloom1.bloomthreshold — порог свечения: 0–1 (0.5), ниже = светятся и тусклые точки\n• bloom1.bloomintensity — сила ореола: 0–2 (0.62), больше = «дымнее»\n• bg1.colorr / colorg / colorb — цвет фона: RGB 0–1 (0.02 / 0.02 / 0.035)\n• out1 — финальный выход 1920×1080; сюда смотреть и отсюда забирать картинку\nНе трогать: over1 (порядок входов: фон bg1 снизу, bloom1 сверху), имя out1",
+    "ops": [],
+    "color": [
+     0.25,
+     0.25,
+     0.27
+    ]
+   }
+  },
+  {
+   "name": "audio_out",
+   "type": "null",
+   "x": 1250,
+   "y": -1000,
+   "family": "CHOP",
+   "inputs": [
+    [
+     0,
+     "audio_limit",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "key_reset",
+   "type": "keyboardin",
+   "x": -250,
+   "y": -160,
+   "family": "CHOP"
+  },
+  {
+   "name": "audio_norm",
+   "type": "math",
+   "x": 750,
+   "y": -1000,
+   "family": "CHOP",
+   "params": {
+    "chanop": "avg",
+    "fromrange1": 0.02,
+    "fromrange2": 0.25
+   },
+   "inputs": [
+    [
+     0,
+     "audio_smooth",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_level",
+   "type": "analyze",
+   "x": 250,
+   "y": -1000,
+   "family": "CHOP",
+   "params": {
+    "function": "rmspower"
+   },
+   "inputs": [
+    [
+     0,
+     "audiofilein1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_limit",
+   "type": "limit",
+   "x": 1000,
+   "y": -1000,
+   "family": "CHOP",
+   "params": {
+    "type": "clamp",
+    "min": 0.0,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_norm",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_color",
+   "type": "level",
+   "x": 750,
+   "y": 900,
+   "family": "TOP",
+   "params": {
+    "brightness1": 0.85
+   },
+   "inputs": [
+    [
+     0,
+     "render1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_smooth",
+   "type": "filter",
+   "x": 500,
+   "y": -1000,
+   "family": "CHOP",
+   "params": {
+    "width": 0.15,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_level",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audiodevout1",
+   "type": "audiodevout",
+   "x": 0,
+   "y": -1200,
+   "family": "CHOP",
+   "params": {
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audiofilein1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audiofilein1",
+   "type": "audiofilein",
+   "x": 0,
+   "y": -1000,
+   "family": "CHOP",
+   "params": {
+    "file": {
+     "expr": "app.samplesFolder+'/Audio/JeremyCaulfield_www.dumb-unit.com.mp3'"
+    },
+    "index": {
+     "expr": "me.time.frame / root.time.rate"
+    },
+    "timeslice": true
+   }
+  },
+  {
+   "name": "pos_sim_pixel",
+   "type": "text",
+   "x": 250,
+   "y": -160,
+   "family": "DAT",
+   "params": {
+    "language": "glsl",
+    "extension": "frag"
+   },
+   "text": "out vec4 fragColor;\n\nuniform vec4 uSphere;   // x = sphere radius, y = pull to the sphere (0..1), z = flow noise scale, w = (free)\nuniform vec4 uMotion;   // x = flow strength, y = breathing amount, z = spin speed, w = (free)\nuniform vec4 uClock;    // x = time in seconds\n\n// ---------- value noise ----------\nfloat hash13(vec3 p){\n    p = fract(p * 0.3183099 + vec3(0.1, 0.2, 0.3));\n    p *= 17.0;\n    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));\n}\n\nfloat vnoise(vec3 x){\n    vec3 i = floor(x);\n    vec3 f = fract(x);\n    f = f * f * (3.0 - 2.0 * f);\n    return mix(mix(mix(hash13(i),                    hash13(i + vec3(1, 0, 0)), f.x),\n                   mix(hash13(i + vec3(0, 1, 0)),    hash13(i + vec3(1, 1, 0)), f.x), f.y),\n               mix(mix(hash13(i + vec3(0, 0, 1)),    hash13(i + vec3(1, 0, 1)), f.x),\n                   mix(hash13(i + vec3(0, 1, 1)),    hash13(i + vec3(1, 1, 1)), f.x), f.y), f.z);\n}\n\nvec3 flow(vec3 p){\n    return vec3(vnoise(p),\n                vnoise(p + vec3(31.4, 17.7, 5.3)),\n                vnoise(p + vec3(-11.2, 7.1, 41.9))) - 0.5;\n}\n\nvoid main(){\n    ivec2 idx = ivec2(gl_FragCoord.xy);\n    vec4 prev = texelFetch(sTD2DInputs[0], idx, 0);   // positions of the previous frame\n    vec4 seed = texelFetch(sTD2DInputs[1], idx, 0);   // tube seed + per particle random\n\n    float rnd = seed.w;\n    float t   = uClock.x;\n\n    vec3 p = prev.xyz;\n    // feedback is empty on the first frame / after reset -> start from the tube\n    if (length(p) < 1e-4) p = seed.xyz;\n\n    float rad = length(p);\n\n    // noise flow, stronger far from the sphere surface\n    vec3 f = flow(p * uSphere.z + vec3(0.0, 0.0, t * 0.15));\n    p += f * uMotion.x * (0.25 + 0.75 * abs(rad - uSphere.x));\n\n    // slow global spin\n    float a = uMotion.z * 0.02;\n    p.xz = mat2(cos(a), -sin(a), sin(a), cos(a)) * p.xz;\n\n    // pull onto the sphere surface, radius breathes per particle\n    float target = uSphere.x + sin(t * 0.7 + rnd * 6.2831853) * uMotion.y;\n    vec3 n = p / max(length(p), 1e-5);\n    p = mix(p, n * target, uSphere.y);\n\n    fragColor = TDOutputSwizzle(vec4(p, rnd));\n}\n"
+  },
+  {
+   "name": "seed_pos_pixel",
+   "type": "text",
+   "x": 0,
+   "y": -160,
+   "family": "DAT",
+   "params": {
+    "language": "glsl",
+    "extension": "frag"
+   },
+   "text": "out vec4 fragColor;\n\nuniform vec4 uSeed;   // x = radius of the start tube, y = height of the tube\n\nfloat hash21(vec2 p){\n    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);\n}\n\nvoid main(){\n    vec2 uv = vUV.st;\n    float a = hash21(uv);\n    float b = hash21(uv + vec2(0.371, 0.113));\n    float c = hash21(uv + vec2(0.719, 0.537));\n\n    float ang = a * 6.2831853;\n    float h = (b - 0.5) * uSeed.y;\n    vec3 p = vec3(cos(ang) * uSeed.x, h, sin(ang) * uSeed.x);\n\n    // xyz = seed position inside the tube, w = per particle random (phase / life)\n    fragColor = TDOutputSwizzle(vec4(p, c));\n}\n"
+  }
+ ]
+}
