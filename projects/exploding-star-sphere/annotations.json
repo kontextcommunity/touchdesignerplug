@@ -1,0 +1,112 @@
+[
+ {
+  "name": "annotate1",
+  "mode": "networkbox",
+  "title": "7 · Аудио: бас, громкость, верха, удар",
+  "body": "",
+  "x": -50,
+  "y": -1250,
+  "w": 1510,
+  "h": 720
+ },
+ {
+  "name": "annotate10",
+  "mode": "networkbox",
+  "title": "1 · Облако точек (труба → sprinkle → текстура 1000×1000)",
+  "body": "",
+  "x": -40,
+  "y": -240,
+  "w": 1410,
+  "h": 420
+ },
+ {
+  "name": "annotate11",
+  "mode": "annotate",
+  "title": "Что менять · аудио",
+  "body": "• audio_in.file — трек (mp3/wav). Сейчас пример из папки TouchDesigner. Звук идёт в audio_out_dev (volume 0–1).\n• Диапазоны полос (fromrange2 у *_norm): bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция.\n• Сглаживание (*_lag lag2, сек): bass 0.35, level 0.6, high 0.2. Больше — плавнее.\n• Удар: kick_trig threshup 0.75 (0.6–0.9), decay 0.25 сек.\nКуда идёт звук (выражения, менять множители):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick) — 0.82 базовый радиус.\n• Вспышка «звезды» на удар: math_len.preoff = −0.035*kick (0 … −0.1; больше — сильнее лучи).\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level.\n• Искры по верхам: pointsprite1.alpha = 0.35 + 0.35*high; bloom1.bloomintensity = 0.25 + 0.55*high + 0.4*kick.\n• Яркость: level_color.brightness1 = 1.3 + 0.5*level. Вращение шара: geo_ps.ry = absTime.seconds*5.\nНе трогать: имена audio_bass / audio_level / audio_high / audio_kick — на них ссылаются выражения.",
+  "x": 930,
+  "y": -1530,
+  "w": 520,
+  "h": 290
+ },
+ {
+  "name": "annotate2",
+  "mode": "annotate",
+  "title": "Что менять · блоки 1–3",
+  "body": "• constant1.count — частиц = count²: 300–1000 (1000 → 1 000 000, ~60 fps)\n• noise1.period — размер вихрей: 0.5–3 (1). ty = absTime.seconds*0.1 — скорость «плавания» потока: множитель 0.05–0.3\n• math_step.gain — шаг за кадр: задан выражением от звука (0.0008 + 0.0035*level), без звука 0.0005–0.003\n• noise_mask.period — размер областей вращения: 1–4 (2); вход маски = pos (позиции, не менять)\n• threshold1.soften — мягкость маски: 0–1 (1)\n• point_xform.ry — поворот ЗА КАДР, градусы: 0–1 (0 = чёткие полотна; больше 0.3 смазывает)\n• life_pos uP z — жизнь частицы, сек: 6–30 (12); uP w — разброс перерождения: 0–1 (0.15)\n• клавиша 1 — пересобрать частицы с нуля\nНе трогать: fb_pos, fb_src, pos, end, start, pos_sim_pixel.",
+  "x": 180,
+  "y": -250,
+  "w": 1970,
+  "h": 10
+ },
+ {
+  "name": "annotate3",
+  "mode": "networkbox",
+  "title": "3 · Движение: шум-поток, маска, вращение",
+  "body": "",
+  "x": 1360,
+  "y": 360,
+  "w": 1210,
+  "h": 520
+ },
+ {
+  "name": "annotate4",
+  "mode": "networkbox",
+  "title": "4 · Сфера — ПОСЛЕ петли (только для рендера)",
+  "body": "",
+  "x": 2410,
+  "y": 360,
+  "w": 610,
+  "h": 220
+ },
+ {
+  "name": "annotate5",
+  "mode": "networkbox",
+  "title": "5 · Рендер точек (point sprites)",
+  "body": "",
+  "x": 2410,
+  "y": 960,
+  "w": 610,
+  "h": 510
+ },
+ {
+  "name": "annotate6",
+  "mode": "annotate",
+  "title": "Что менять · блоки 4–5",
+  "body": "• math_len.gain = 1/радиус — сейчас выражение от звука (база 0.82 → радиус ~1.2)\n• math_len.preoff — формы «взрыва звезды»: −0.1…0 (сейчас −0.035*kick)\n• pointsprite1.alpha — плотность/яркость: 0.2–0.8 (выражение от верхов); pointsize 0.5–2 (1)\n• pointsprite1.attenpscale = 0 и destblend = one — НЕ трогать (иначе точки огромные / нет свечения)\n• camera1.tz — размер шара в кадре: 4–8 (5.4)\n• geo_ps.ry — вращение шара: absTime.seconds*5 (множитель 0–20)\nНе трогать: comp_div (деление на длину), end как вход math_len.",
+  "x": 2430,
+  "y": 730,
+  "w": 400,
+  "h": 230
+ },
+ {
+  "name": "annotate7",
+  "mode": "networkbox",
+  "title": "2 · Петля позиций (feedback)",
+  "body": "",
+  "x": 1400,
+  "y": -63,
+  "w": 592,
+  "h": 343
+ },
+ {
+  "name": "annotate8",
+  "mode": "networkbox",
+  "title": "6 · Цвет, свечение, выход",
+  "body": "",
+  "x": 3050,
+  "y": 960,
+  "w": 810,
+  "h": 470
+ },
+ {
+  "name": "annotate9",
+  "mode": "annotate",
+  "title": "Что менять · блок 6",
+  "body": "• level_color.highr / highb — оттенок: 0.82 / 0.8 (бледно-зелёный); brightness1 — выражение от громкости (1.3–1.8)\n• bloom1.preblacklevel — что светится: 0.5–0.9 (0.7); bloomintensity — выражение от верхов и удара\n• bg1 — цвет фона (0.02 / 0.02 / 0.035)\nНе трогать: over1 (bloom поверх фона), имя out1.",
+  "x": 3070,
+  "y": 750,
+  "w": 770,
+  "h": 210
+ }
+]
