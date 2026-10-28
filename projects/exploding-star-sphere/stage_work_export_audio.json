@@ -1,0 +1,4057 @@
+{
+ "root": "/project1/stage_work",
+ "td_build": "2025.31550",
+ "nodes": [
+  {
+   "name": "bg1",
+   "type": "constantTOP",
+   "x": 3090,
+   "y": 1250,
+   "params": {
+    "colorr": 0.02,
+    "colorg": 0.02,
+    "colorb": 0.035,
+    "outputresolution": "custom",
+    "resolutionw": 1920,
+    "resolutionh": 1080
+   }
+  },
+  {
+   "name": "end",
+   "type": "nullTOP",
+   "x": 2000,
+   "y": 100,
+   "inputs": [
+    [
+     0,
+     "life_pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "pos",
+   "type": "nullTOP",
+   "x": 1800,
+   "y": 100,
+   "inputs": [
+    [
+     0,
+     "fb_pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "out1",
+   "type": "nullTOP",
+   "x": 3690,
+   "y": 1000,
+   "inputs": [
+    [
+     0,
+     "over1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "over1",
+   "type": "overTOP",
+   "x": 3490,
+   "y": 1000,
+   "params": {
+    "outputresolution": "custom",
+    "resolutionw": 1920,
+    "resolutionh": 1080
+   },
+   "inputs": [
+    [
+     0,
+     "bloom1",
+     0
+    ],
+    [
+     1,
+     "bg1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "start",
+   "type": "nullTOP",
+   "x": 1200,
+   "y": 0,
+   "inputs": [
+    [
+     0,
+     "chopto1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "tube1",
+   "type": "tubeSOP",
+   "x": 0,
+   "y": 0,
+   "params": {
+    "rad1": 0.1,
+    "rad2": 0.1
+   }
+  },
+  {
+   "name": "bloom1",
+   "type": "bloomTOP",
+   "x": 3290,
+   "y": 1000,
+   "params": {
+    "preblacklevel": 0.7,
+    "bloomthreshold": 0.5,
+    "bloomintensity": {
+     "expr": "0.25 + 0.55*op('audio_high')[0] + 0.4*op('audio_kick')[0]"
+    },
+    "outputresolution": "half",
+    "resolutionw": 1920,
+    "resolutionh": 1080
+   },
+   "inputs": [
+    [
+     0,
+     "level_color",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "fb_pos",
+   "type": "feedbackTOP",
+   "x": 1600,
+   "y": 100,
+   "params": {
+    "top": "/project1/stage_work/fb_src",
+    "reset": {
+     "expr": "op('key_reset')['k1']"
+    },
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "start",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "fb_src",
+   "type": "nullTOP",
+   "x": 2200,
+   "y": 100,
+   "inputs": [
+    [
+     0,
+     "end",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "geo_ps",
+   "type": "geometryCOMP",
+   "x": 2650,
+   "y": 1000,
+   "params": {
+    "rx": {
+     "expr": "math.sin(absTime.seconds*0.13)*12"
+    },
+    "ry": {
+     "expr": "absTime.seconds*5"
+    },
+    "rz": 0.0,
+    "instancing": true,
+    "instancecountmode": "manual",
+    "numinstances": {
+     "expr": "op('pos').width * op('pos').height"
+    },
+    "instancetop": "/project1/stage_work/math_shape",
+    "instancetx": "r",
+    "instancety": "g",
+    "instancetz": "b",
+    "material": "/project1/stage_work/pointsprite1"
+   },
+   "children": [
+    {
+     "name": "add_pt",
+     "type": "addSOP",
+     "x": 0,
+     "y": 0,
+     "params": {
+      "addpts": true,
+      "method": "group"
+     }
+    },
+    {
+     "name": "convert_pt",
+     "type": "convertSOP",
+     "x": 200,
+     "y": 0,
+     "params": {
+      "totype": "part"
+     },
+     "inputs": [
+      [
+       0,
+       "add_pt",
+       0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "noise1",
+   "type": "noiseTOP",
+   "x": 1400,
+   "y": 400,
+   "params": {
+    "type": "perlin3d",
+    "amp": 1.0,
+    "offset": 0.0,
+    "mono": false,
+    "tx": 0.0,
+    "ty": {
+     "expr": "absTime.seconds*0.1"
+    },
+    "tz": 0.0,
+    "gradient": true,
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "pos",
+     0
+    ],
+    [
+     1,
+     "pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "sopto1",
+   "type": "soptoCHOP",
+   "x": 600,
+   "y": 0,
+   "params": {
+    "sop": "/project1/stage_work/null_sop1",
+    "exportmethod": "datname"
+   }
+  },
+  {
+   "name": "camera1",
+   "type": "cameraCOMP",
+   "x": 2650,
+   "y": 1250,
+   "params": {
+    "tx": 0.0,
+    "ty": 0.0,
+    "tz": 5.4
+   },
+   "children": [
+    {
+     "name": "file1",
+     "type": "fileinPOP",
+     "x": 0,
+     "y": 0,
+     "params": {
+      "file": {
+       "expr": "app.samplesFolder + '/Geo/defcam.tog'"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "chopto1",
+   "type": "choptoTOP",
+   "x": 1000,
+   "y": 0,
+   "params": {
+    "chop": "/project1/stage_work/null_chop1",
+    "dataformat": "rgb",
+    "layout": "square",
+    "resolutionw": 1000,
+    "resolutionh": 1000,
+    "format": "rgba32float"
+   }
+  },
+  {
+   "name": "mat_dot",
+   "type": "constantMAT",
+   "x": 2450,
+   "y": 1100,
+   "params": {
+    "alpha": 0.06,
+    "blending": true
+   }
+  },
+  {
+   "name": "render1",
+   "type": "renderTOP",
+   "x": 2850,
+   "y": 1000,
+   "params": {
+    "camera": "/project1/stage_work/camera1",
+    "geometry": "/project1/stage_work/geo_ps",
+    "antialias": "aa1",
+    "resolutionw": 1920,
+    "resolutionh": 1080,
+    "format": "rgba16float"
+   }
+  },
+  {
+   "name": "audio_in",
+   "type": "audiofileinCHOP",
+   "x": -10,
+   "y": -910,
+   "params": {
+    "file": {
+     "expr": "app.samplesFolder + '/Audio/JeremyCaulfield_www.dumb-unit.com.mp3'"
+    },
+    "timeslice": true
+   }
+  },
+  {
+   "name": "bass_lag",
+   "type": "lagCHOP",
+   "x": 490,
+   "y": -910,
+   "params": {
+    "lag1": 0.02,
+    "lag2": 0.35,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "bass_rms",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "bass_rms",
+   "type": "analyzeCHOP",
+   "x": 340,
+   "y": -910,
+   "params": {
+    "function": "rmspower"
+   },
+   "inputs": [
+    [
+     0,
+     "bass_filt",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "comp_div",
+   "type": "compositeTOP",
+   "x": 2650,
+   "y": 400,
+   "params": {
+    "operand": "divide",
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "life_pos",
+     0
+    ],
+    [
+     1,
+     "math_len",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "high_lag",
+   "type": "lagCHOP",
+   "x": 490,
+   "y": -1210,
+   "params": {
+    "lag1": 0.01,
+    "lag2": 0.2,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "high_rms",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "high_rms",
+   "type": "analyzeCHOP",
+   "x": 340,
+   "y": -1210,
+   "params": {
+    "function": "rmspower"
+   },
+   "inputs": [
+    [
+     0,
+     "high_filt",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "kick_lag",
+   "type": "lagCHOP",
+   "x": 890,
+   "y": -760,
+   "params": {
+    "lag1": 0.0,
+    "lag2": 0.06,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "bass_rms",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "life_pos",
+   "type": "glslTOP",
+   "x": 2200,
+   "y": 400,
+   "params": {
+    "pixeldat": "/project1/stage_work/pos_sim_pixel",
+    "computedat": "/project1/stage_work/life_pos_compute",
+    "premultrgbbyalpha": false,
+    "vec0name": "uP",
+    "vec0valuex": {
+     "expr": "absTime.seconds"
+    },
+    "vec0valuey": {
+     "expr": "1/root.time.rate"
+    },
+    "vec0valuez": 12.0,
+    "vec0valuew": 0.15,
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "point_xform",
+     0
+    ],
+    [
+     1,
+     "start",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "math_len",
+   "type": "mathTOP",
+   "x": 2450,
+   "y": 400,
+   "params": {
+    "chanop": "len",
+    "inputmask": "7",
+    "preoff": {
+     "expr": "-0.035*op('audio_kick')[0]"
+    },
+    "gain": {
+     "expr": "1/(0.82 + 0.08*op('audio_bass')[0] + 0.05*op('audio_kick')[0])"
+    },
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "mono32float"
+   },
+   "inputs": [
+    [
+     0,
+     "life_pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "add_noise",
+   "type": "compositeTOP",
+   "x": 1800,
+   "y": 400,
+   "params": {
+    "operand": "add",
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "pos",
+     0
+    ],
+    [
+     1,
+     "math_step",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "annotate1",
+   "type": "annotateCOMP",
+   "x": -50,
+   "y": -1250,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate1/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "7 · Аудио: бас, громкость, верха, удар",
+    "Mode": "networkbox",
+    "Backcolorr": 0.2,
+    "Backcolorg": 0.34,
+    "Backcolorb": 0.24,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate1/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate1/annotation/title/titleText",
+         "/project1/stage_work/annotate1/annotation/title/dragger",
+         "/project1/stage_work/annotate1/annotation/body/bodyText",
+         "/project1/stage_work/annotate1/annotation/body",
+         "/project1/stage_work/annotate1/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate1/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate1/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate2",
+   "type": "annotateCOMP",
+   "x": 180,
+   "y": -250,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate2/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "Что менять · блоки 1–3",
+    "Bodytext": "• constant1.count — частиц = count²: 300–1000 (1000 → 1 000 000, ~60 fps)\n• noise1.period — размер вихрей: 0.5–3 (1). ty = absTime.seconds*0.1 — скорость «плавания» потока: множитель 0.05–0.3\n• math_step.gain — шаг за кадр: задан выражением от звука (0.0008 + 0.0035*level), без звука 0.0005–0.003\n• noise_mask.period — размер областей вращения: 1–4 (2); вход маски = pos (позиции, не менять)\n• threshold1.soften — мягкость маски: 0–1 (1)\n• point_xform.ry — поворот ЗА КАДР, градусы: 0–1 (0 = чёткие полотна; больше 0.3 смазывает)\n• life_pos uP z — жизнь частицы, сек: 6–30 (12); uP w — разброс перерождения: 0–1 (0.15)\n• клавиша 1 — пересобрать частицы с нуля\nНе трогать: fb_pos, fb_src, pos, end, start, pos_sim_pixel.",
+    "Mode": "annotate",
+    "Backcolorr": 0.25,
+    "Backcolorg": 0.25,
+    "Backcolorb": 0.27,
+    "Backcoloralpha": 0.85
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate2/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate2/annotation/title/titleText",
+         "/project1/stage_work/annotate2/annotation/title/dragger",
+         "/project1/stage_work/annotate2/annotation/body/bodyText",
+         "/project1/stage_work/annotate2/annotation/body",
+         "/project1/stage_work/annotate2/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate2/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate2/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate3",
+   "type": "annotateCOMP",
+   "x": 1360,
+   "y": 360,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate3/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "3 · Движение: шум-поток, маска, вращение",
+    "Mode": "networkbox",
+    "Backcolorr": 0.33,
+    "Backcolorg": 0.29,
+    "Backcolorb": 0.45,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate3/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate3/annotation/title/titleText",
+         "/project1/stage_work/annotate3/annotation/title/dragger",
+         "/project1/stage_work/annotate3/annotation/body/bodyText",
+         "/project1/stage_work/annotate3/annotation/body",
+         "/project1/stage_work/annotate3/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate3/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate3/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate4",
+   "type": "annotateCOMP",
+   "x": 2410,
+   "y": 360,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate4/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "4 · Сфера — ПОСЛЕ петли (только для рендера)",
+    "Mode": "networkbox",
+    "Backcolorr": 0.29,
+    "Backcolorg": 0.29,
+    "Backcolorb": 0.31,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate4/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate4/annotation/title/titleText",
+         "/project1/stage_work/annotate4/annotation/title/dragger",
+         "/project1/stage_work/annotate4/annotation/body/bodyText",
+         "/project1/stage_work/annotate4/annotation/body",
+         "/project1/stage_work/annotate4/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate4/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate4/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate5",
+   "type": "annotateCOMP",
+   "x": 2410,
+   "y": 960,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate5/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "5 · Рендер точек (point sprites)",
+    "Mode": "networkbox",
+    "Backcolorr": 0.22,
+    "Backcolorg": 0.28,
+    "Backcolorb": 0.42,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate5/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate5/annotation/title/titleText",
+         "/project1/stage_work/annotate5/annotation/title/dragger",
+         "/project1/stage_work/annotate5/annotation/body/bodyText",
+         "/project1/stage_work/annotate5/annotation/body",
+         "/project1/stage_work/annotate5/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate5/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate5/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate6",
+   "type": "annotateCOMP",
+   "x": 2430,
+   "y": 730,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate6/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "Что менять · блоки 4–5",
+    "Bodytext": "• math_len.gain = 1/радиус — сейчас выражение от звука (база 0.82 → радиус ~1.2)\n• math_len.preoff — формы «взрыва звезды»: −0.1…0 (сейчас −0.035*kick)\n• pointsprite1.alpha — плотность/яркость: 0.2–0.8 (выражение от верхов); pointsize 0.5–2 (1)\n• pointsprite1.attenpscale = 0 и destblend = one — НЕ трогать (иначе точки огромные / нет свечения)\n• camera1.tz — размер шара в кадре: 4–8 (5.4)\n• geo_ps.ry — вращение шара: absTime.seconds*5 (множитель 0–20)\nНе трогать: comp_div (деление на длину), end как вход math_len.",
+    "Mode": "annotate",
+    "Backcolorr": 0.25,
+    "Backcolorg": 0.25,
+    "Backcolorb": 0.27,
+    "Backcoloralpha": 0.85
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate6/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate6/annotation/title/titleText",
+         "/project1/stage_work/annotate6/annotation/title/dragger",
+         "/project1/stage_work/annotate6/annotation/body/bodyText",
+         "/project1/stage_work/annotate6/annotation/body",
+         "/project1/stage_work/annotate6/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate6/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate6/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate7",
+   "type": "annotateCOMP",
+   "x": 1400,
+   "y": -63,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate7/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "2 · Петля позиций (feedback)",
+    "Mode": "networkbox",
+    "Backcolorr": 0.2,
+    "Backcolorg": 0.34,
+    "Backcolorb": 0.36,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate7/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate7/annotation/title/titleText",
+         "/project1/stage_work/annotate7/annotation/title/dragger",
+         "/project1/stage_work/annotate7/annotation/body/bodyText",
+         "/project1/stage_work/annotate7/annotation/body",
+         "/project1/stage_work/annotate7/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate7/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate7/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate8",
+   "type": "annotateCOMP",
+   "x": 3050,
+   "y": 960,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate8/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "6 · Цвет, свечение, выход",
+    "Mode": "networkbox",
+    "Backcolorr": 0.42,
+    "Backcolorg": 0.33,
+    "Backcolorb": 0.2,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate8/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate8/annotation/title/titleText",
+         "/project1/stage_work/annotate8/annotation/title/dragger",
+         "/project1/stage_work/annotate8/annotation/body/bodyText",
+         "/project1/stage_work/annotate8/annotation/body",
+         "/project1/stage_work/annotate8/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate8/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate8/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate9",
+   "type": "annotateCOMP",
+   "x": 3070,
+   "y": 750,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate9/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "Что менять · блок 6",
+    "Bodytext": "• level_color.highr / highb — оттенок: 0.82 / 0.8 (бледно-зелёный); brightness1 — выражение от громкости (1.3–1.8)\n• bloom1.preblacklevel — что светится: 0.5–0.9 (0.7); bloomintensity — выражение от верхов и удара\n• bg1 — цвет фона (0.02 / 0.02 / 0.035)\nНе трогать: over1 (bloom поверх фона), имя out1.",
+    "Mode": "annotate",
+    "Backcolorr": 0.25,
+    "Backcolorg": 0.25,
+    "Backcolorb": 0.27,
+    "Backcoloralpha": 0.85
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate9/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate9/annotation/title/titleText",
+         "/project1/stage_work/annotate9/annotation/title/dragger",
+         "/project1/stage_work/annotate9/annotation/body/bodyText",
+         "/project1/stage_work/annotate9/annotation/body",
+         "/project1/stage_work/annotate9/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate9/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate9/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "bass_filt",
+   "type": "audiofilterCHOP",
+   "x": 190,
+   "y": -910,
+   "params": {
+    "units": "frequency",
+    "cutofffrequency": 150.0,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_in",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "bass_norm",
+   "type": "mathCHOP",
+   "x": 640,
+   "y": -910,
+   "params": {
+    "fromrange1": 0.05,
+    "fromrange2": 0.42
+   },
+   "inputs": [
+    [
+     0,
+     "bass_lag",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "constant1",
+   "type": "constantCHOP",
+   "x": 400,
+   "y": -200,
+   "params": {
+    "const0name": "count",
+    "const0value": 1000.0
+   }
+  },
+  {
+   "name": "high_filt",
+   "type": "audiofilterCHOP",
+   "x": 190,
+   "y": -1210,
+   "params": {
+    "filter": "highpass",
+    "units": "frequency",
+    "cutofffrequency": 4000.0,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_in",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "high_norm",
+   "type": "mathCHOP",
+   "x": 640,
+   "y": -1210,
+   "params": {
+    "fromrange1": 0.006,
+    "fromrange2": 0.07
+   },
+   "inputs": [
+    [
+     0,
+     "high_lag",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "key_reset",
+   "type": "keyboardinCHOP",
+   "x": 1440,
+   "y": 100
+  },
+  {
+   "name": "kick_norm",
+   "type": "mathCHOP",
+   "x": 1040,
+   "y": -760,
+   "params": {
+    "fromrange1": 0.18,
+    "fromrange2": 0.4
+   },
+   "inputs": [
+    [
+     0,
+     "kick_lag",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "kick_trig",
+   "type": "triggerCHOP",
+   "x": 1140,
+   "y": -910,
+   "params": {
+    "threshup": 0.75,
+    "threshdown": 0.4,
+    "attack": 0.0,
+    "decay": 0.25,
+    "sustain": 0.0,
+    "release": 0.15,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "kick_norm",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_lag",
+   "type": "lagCHOP",
+   "x": 490,
+   "y": -1060,
+   "params": {
+    "lag1": 0.05,
+    "lag2": 0.6,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "level_rms",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_rms",
+   "type": "analyzeCHOP",
+   "x": 340,
+   "y": -1060,
+   "params": {
+    "function": "rmspower"
+   },
+   "inputs": [
+    [
+     0,
+     "audio_in",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "math_step",
+   "type": "mathTOP",
+   "x": 1600,
+   "y": 400,
+   "params": {
+    "gain": {
+     "expr": "0.0008 + 0.0035*op('audio_level')[0]"
+    },
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "noise1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "null_sop1",
+   "type": "nullSOP",
+   "x": 400,
+   "y": 0,
+   "inputs": [
+    [
+     0,
+     "sprinkle1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "sprinkle1",
+   "type": "sprinkleSOP",
+   "x": 200,
+   "y": 0,
+   "params": {
+    "seed": 0.01899999938905239,
+    "numpoints": {
+     "expr": "op('constant1')['count']**2"
+    }
+   },
+   "inputs": [
+    [
+     0,
+     "tube1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "annotate10",
+   "type": "annotateCOMP",
+   "x": -40,
+   "y": -240,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate10/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "1 · Облако точек (труба → sprinkle → текстура 1000×1000)",
+    "Mode": "networkbox",
+    "Backcolorr": 0.22,
+    "Backcolorg": 0.3,
+    "Backcolorb": 0.38,
+    "Backcoloralpha": 0.55
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate10/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate10/annotation/title/titleText",
+         "/project1/stage_work/annotate10/annotation/title/dragger",
+         "/project1/stage_work/annotate10/annotation/body/bodyText",
+         "/project1/stage_work/annotate10/annotation/body",
+         "/project1/stage_work/annotate10/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate10/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate10/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "annotate11",
+   "type": "annotateCOMP",
+   "x": 930,
+   "y": -1530,
+   "params": {
+    "pageindex": 3,
+    "opviewer": "/project1/stage_work/annotate11/annotation",
+    "encloseops": {
+     "expr": "me.EncloseOPs if hasattr(me, 'EncloseOPs') else True"
+    },
+    "includeinorder": true,
+    "layerzone": {
+     "expr": "0 if hasattr(me, 'EncloseOPs') and me.EncloseOPs else 1"
+    },
+    "ext0object": "op.TDAnnotate.mod.AnnotateExt.AnnotateExt(me)",
+    "ext0promote": true,
+    "parentshortcut": "Annotate",
+    "clone": {
+     "expr": "op.TDAnnotate.op('annotate', includeUtility=True)"
+    },
+    "Titletext": "Что менять · аудио",
+    "Bodytext": "• audio_in.file — трек (mp3/wav). Сейчас пример из папки TouchDesigner. Звук идёт в audio_out_dev (volume 0–1).\n• Диапазоны полос (fromrange2 у *_norm): bass 0.42, level 0.42, high 0.07. Меньше число — сильнее реакция.\n• Сглаживание (*_lag lag2, сек): bass 0.35, level 0.6, high 0.2. Больше — плавнее.\n• Удар: kick_trig threshup 0.75 (0.6–0.9), decay 0.25 сек.\nКуда идёт звук (выражения, менять множители):\n• Дыхание шара: math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick) — 0.82 базовый радиус.\n• Вспышка «звезды» на удар: math_len.preoff = −0.035*kick (0 … −0.1; больше — сильнее лучи).\n• Скорость потока: math_step.gain = 0.0008 + 0.0035*level.\n• Искры по верхам: pointsprite1.alpha = 0.35 + 0.35*high; bloom1.bloomintensity = 0.25 + 0.55*high + 0.4*kick.\n• Яркость: level_color.brightness1 = 1.3 + 0.5*level. Вращение шара: geo_ps.ry = absTime.seconds*5.\nНе трогать: имена audio_bass / audio_level / audio_high / audio_kick — на них ссылаются выражения.",
+    "Mode": "annotate",
+    "Backcolorr": 0.25,
+    "Backcolorg": 0.25,
+    "Backcolorb": 0.27,
+    "Backcoloralpha": 0.85
+   },
+   "children": [
+    {
+     "name": "annotation",
+     "type": "containerCOMP",
+     "x": 56,
+     "y": 40,
+     "params": {
+      "pageindex": 1,
+      "w": 600,
+      "h": 600,
+      "hmode": "fill",
+      "vmode": "fill",
+      "clickthrough": true,
+      "allowuishortcuts": true,
+      "resizecomp": {
+       "expr": "parent.Annotate"
+      },
+      "resizewmin": -10000.0,
+      "resizewmax": 10000.0,
+      "resizehmin": -10000.0,
+      "resizehmax": 10000.0,
+      "reposition": "component",
+      "borderar": 1.0,
+      "borderag": 1.0,
+      "borderab": 1.0,
+      "borderaalpha": 0.0,
+      "leftborder": "bordera",
+      "rightborder": "bordera",
+      "bottomborder": "bordera",
+      "topborder": "bordera",
+      "opacity": {
+       "expr": "parent.Annotate.par.Opacity"
+      },
+      "align": "verttb",
+      "enablecloning": false
+     },
+     "children": [
+      {
+       "name": "back",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": 25,
+       "params": {
+        "pageindex": 1,
+        "layer": -2.0,
+        "hmode": "fill",
+        "vmode": "fill",
+        "alignallow": "ignore",
+        "enable": false,
+        "clickthrough": true,
+        "allowuishortcuts": true,
+        "top": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0] + 0.1"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1] + 0.1"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2] + 0.1"
+        },
+        "borderaalpha": {
+         "expr": "parent.Annotate.Editing"
+        },
+        "leftborder": "bordera",
+        "leftborderi": "bordera",
+        "rightborder": "bordera",
+        "rightborderi": "bordera",
+        "bottomborder": "bordera",
+        "bottomborderi": "bordera",
+        "topborder": "bordera",
+        "topborderi": "bordera",
+        "align": "verttb"
+       }
+      },
+      {
+       "name": "body",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": -111,
+       "params": {
+        "pageindex": 1,
+        "x": 10,
+        "y": -10,
+        "w": {
+         "expr": "min(parent().width, 1000)"
+        },
+        "h": {
+         "expr": "min(parent().height - op('title').height, 500)"
+        },
+        "hmode": "fill",
+        "vmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "alignorder": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'comment']"
+        },
+        "clickthrough": {
+         "expr": "not parent.Annotate.Editing"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": null,
+        "resizewmin": -4000.0,
+        "resizewmax": 4000.0,
+        "resizehmin": -4000.0,
+        "resizehmax": 4000.0,
+        "repocomp": null,
+        "borderar": {
+         "expr": "parent.Annotate.TitleColor[0]"
+        },
+        "borderag": {
+         "expr": "parent.Annotate.TitleColor[1]"
+        },
+        "borderab": {
+         "expr": "parent.Annotate.TitleColor[2]"
+        },
+        "borderbalpha": 0.0,
+        "borderover": false,
+        "justifyh": "left",
+        "scrollbarthickness": 79
+       }
+      },
+      {
+       "name": "title",
+       "type": "containerCOMP",
+       "x": 32,
+       "y": 43,
+       "params": {
+        "x": 10,
+        "h": {
+         "expr": "parent.Annotate.par.Titleheight"
+        },
+        "hmode": "fill",
+        "bottomanchor": 1.0,
+        "vorigin": 1.0,
+        "display": {
+         "expr": "parent.Annotate.par.Mode in ['annotate', 'networkbox']"
+        },
+        "allowuishortcuts": true,
+        "resizecomp": "/project1/stage_work/annotate11/annotation/title",
+        "resizewmin": -10000.0,
+        "resizewmax": 10000.0,
+        "resizehmin": 10.0,
+        "resizehmax": 10000.0,
+        "repocomp": null,
+        "repositionxmin": -10000.0,
+        "repositionxmax": 10000.0,
+        "repositionymin": -10000.0,
+        "repositionymax": 10000.0,
+        "top": null,
+        "topfill": "vertical",
+        "borderar": 0.498039,
+        "borderag": 0.866667,
+        "borderab": 1.0,
+        "borderover": false,
+        "align": "horizlr",
+        "justifyv": "center"
+       }
+      },
+      {
+       "name": "opview",
+       "type": "containerCOMP",
+       "x": 275,
+       "y": -100,
+       "params": {
+        "pageindex": 6,
+        "h": {
+         "expr": "parent().height - (1-parent(2).par.Opviewerfillbodytitle) * parent.Annotate.par.Titleheight"
+        },
+        "layer": -1.0,
+        "hmode": "fill",
+        "alignallow": "ignoremargin",
+        "display": {
+         "expr": "parent.Annotate.par.Opviewerdisplay and parent.Annotate.par.Opviewer and parent.Annotate.par.Mode == 'annotate'"
+        },
+        "clickthrough": true,
+        "borderover": false,
+        "crop": "on"
+       }
+      },
+      {
+       "name": "parexec1",
+       "type": "parameterexecuteDAT",
+       "x": -150,
+       "y": -150,
+       "params": {
+        "op": {
+         "expr": "parent.Annotate"
+        },
+        "pars": "Mode Help",
+        "builtin": false,
+        "language": "python"
+       },
+       "text": "def onValueChange(par, prev):\n\text.AnnotateExt.onParValueChange(par, prev)\n\ndef onPulse(par):\n\text.AnnotateExt.onParPulse(par)\n\t"
+      },
+      {
+       "name": "focusOrder",
+       "type": "tableDAT",
+       "x": -150,
+       "y": -50,
+       "params": {
+        "defaultreadencoding": "cp1252",
+        "rows": 2,
+        "cols": 1,
+        "language": "text"
+       },
+       "text": "title/titleText\r\nbody/bodyText\r\n"
+      },
+      {
+       "name": "panelexec1",
+       "type": "panelexecuteDAT",
+       "x": -150,
+       "y": 50,
+       "params": {
+        "pageindex": 3,
+        "panels": [
+         "/project1/stage_work/annotate11/annotation/title/titleText",
+         "/project1/stage_work/annotate11/annotation/title/dragger",
+         "/project1/stage_work/annotate11/annotation/body/bodyText",
+         "/project1/stage_work/annotate11/annotation/body",
+         "/project1/stage_work/annotate11/annotation/body/bodyDragger",
+         "/project1/stage_work/annotate11/annotation/title/buttons/edit",
+         "/project1/stage_work/annotate11/annotation"
+        ],
+        "panelvalue": "rselect lselect field focusselect",
+        "offtoon": false,
+        "valuechange": true,
+        "defaultreadencoding": "cp1252",
+        "language": "python"
+       },
+       "text": "def onValueChange(panelValue, prev):\n\text.AnnotateExt.onPanelValueChange(panelValue, prev)\n\t"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "audio_bass",
+   "type": "nullCHOP",
+   "x": 940,
+   "y": -910,
+   "inputs": [
+    [
+     0,
+     "bass_clamp",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_high",
+   "type": "nullCHOP",
+   "x": 940,
+   "y": -1210,
+   "inputs": [
+    [
+     0,
+     "high_clamp",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_kick",
+   "type": "nullCHOP",
+   "x": 1290,
+   "y": -910,
+   "inputs": [
+    [
+     0,
+     "kick_trig",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "bass_clamp",
+   "type": "limitCHOP",
+   "x": 790,
+   "y": -910,
+   "params": {
+    "type": "clamp",
+    "min": 0.0
+   },
+   "inputs": [
+    [
+     0,
+     "bass_norm",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "high_clamp",
+   "type": "limitCHOP",
+   "x": 790,
+   "y": -1210,
+   "params": {
+    "type": "clamp",
+    "min": 0.0
+   },
+   "inputs": [
+    [
+     0,
+     "high_norm",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_norm",
+   "type": "mathCHOP",
+   "x": 640,
+   "y": -1060,
+   "params": {
+    "fromrange1": 0.05,
+    "fromrange2": 0.42
+   },
+   "inputs": [
+    [
+     0,
+     "level_lag",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "math_range",
+   "type": "mathTOP",
+   "x": 1800,
+   "y": 700,
+   "params": {
+    "torange1": -1.0,
+    "torange2": 1.0,
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "threshold1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "math_shape",
+   "type": "mathTOP",
+   "x": 2850,
+   "y": 400,
+   "params": {
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "comp_div",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "noise_mask",
+   "type": "noiseTOP",
+   "x": 1400,
+   "y": 700,
+   "params": {
+    "type": "perlin3d",
+    "period": 2.0,
+    "harmon": 10,
+    "amp": 1.0,
+    "offset": 0.0,
+    "mono": false,
+    "tx": 0.0,
+    "ty": {
+     "expr": "absTime.seconds*0.1"
+    },
+    "tz": 0.0,
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "pos",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "null_chop1",
+   "type": "nullCHOP",
+   "x": 800,
+   "y": 0,
+   "inputs": [
+    [
+     0,
+     "sopto1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "threshold1",
+   "type": "thresholdTOP",
+   "x": 1600,
+   "y": 700,
+   "params": {
+    "threshold": 0.0,
+    "soften": 1.0,
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "noise_mask",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "audio_level",
+   "type": "nullCHOP",
+   "x": 940,
+   "y": -1060,
+   "inputs": [
+    [
+     0,
+     "level_clamp",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_clamp",
+   "type": "limitCHOP",
+   "x": 790,
+   "y": -1060,
+   "params": {
+    "type": "clamp",
+    "min": 0.0
+   },
+   "inputs": [
+    [
+     0,
+     "level_norm",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "level_color",
+   "type": "levelTOP",
+   "x": 3090,
+   "y": 1000,
+   "params": {
+    "brightness1": {
+     "expr": "1.3 + 0.5*op('audio_level')[0]"
+    },
+    "highr": 0.82,
+    "highb": 0.8
+   },
+   "inputs": [
+    [
+     0,
+     "render1",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "point_xform",
+   "type": "pointtransformTOP",
+   "x": 2000,
+   "y": 400,
+   "params": {
+    "outputresolution": "custom",
+    "resolutionw": {
+     "expr": "op('start').width"
+    },
+    "resolutionh": {
+     "expr": "op('start').height"
+    },
+    "format": "rgba32float"
+   },
+   "inputs": [
+    [
+     0,
+     "add_noise",
+     0
+    ],
+    [
+     1,
+     "math_range",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "pointsprite1",
+   "type": "pointspriteMAT",
+   "x": 2450,
+   "y": 1380,
+   "params": {
+    "alpha": {
+     "expr": "0.35 + 0.35*op('audio_high')[0]"
+    },
+    "blending": true,
+    "srcblend": "sa",
+    "destblend": "one"
+   }
+  },
+  {
+   "name": "audio_out_dev",
+   "type": "audiodeviceoutCHOP",
+   "x": 190,
+   "y": -710,
+   "params": {
+    "volume": 0.8,
+    "timeslice": true
+   },
+   "inputs": [
+    [
+     0,
+     "audio_in",
+     0
+    ]
+   ]
+  },
+  {
+   "name": "life_pos_info",
+   "type": "infoDAT",
+   "x": 160,
+   "y": -120,
+   "params": {
+    "op": "/project1/stage_work/life_pos",
+    "language": "text"
+   },
+   "text": "Vertex Shader Compile Results:\n\nCompiled Successfully\n\n=============\nPixel Shader Compile Results:\n\nCompiled Successfully\n"
+  },
+  {
+   "name": "pos_sim_pixel",
+   "type": "textDAT",
+   "x": 2400,
+   "y": 550,
+   "params": {
+    "language": "glsl",
+    "extension": "frag"
+   },
+   "text": "uniform vec4 uP;   // x = time, y = dt, z = life seconds\nout vec4 fragColor;\nfloat hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }\nvoid main(){\n    vec2 uv = vUV.st;\n    vec4 cur = texture(sTD2DInputs[0], uv);\n    vec4 st  = texture(sTD2DInputs[1], uv);\n    float h  = hash(uv) * uP.w;   // w = spread of respawn times (0 = all particles together)\n    float g1 = floor(uP.x / uP.z + h);\n    float g0 = floor((uP.x - uP.y) / uP.z + h);\n    fragColor = vec4(g1 != g0 ? st.rgb : cur.rgb, 1.0);\n}\n"
+  },
+  {
+   "name": "life_pos_pixel",
+   "type": "textDAT",
+   "x": 0,
+   "y": -120,
+   "params": {
+    "language": "glsl",
+    "extension": "frag"
+   },
+   "text": "\n// Example Pixel Shader\n\n// uniform float exampleUniform;\n\nout vec4 fragColor;\nvoid main()\n{\n\t// vec4 color = texture(sTD2DInputs[0], vUV.st);\n\tvec4 color = vec4(1.0);\n\tfragColor = TDOutputSwizzle(color);\n}\n"
+  },
+  {
+   "name": "life_pos_compute",
+   "type": "textDAT",
+   "x": 320,
+   "y": -120,
+   "params": {
+    "language": "glsl"
+   },
+   "text": "// Example Compute Shader\n\n// uniform float exampleUniform;\n\nlayout (local_size_x = 8, local_size_y = 8) in;\nvoid main()\n{\n\tvec4 color;\n\t//color = texelFetch(sTD2DInputs[0], ivec2(gl_GlobalInvocationID.xy), 0);\n\tcolor = vec4(1.0);\n\t// We need to use TDImageStoreOutput() so that 8-bit textures that are sRGB\n\t// encoded can be written to correctly from incoming linear values.\n\t// imageStore() does not do this automatically, while pixel shader outputs do.\n\tTDImageStoreOutput(0, gl_GlobalInvocationID, color);\n}\n"
+  }
+ ]
+}

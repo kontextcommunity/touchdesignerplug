@@ -111,14 +111,40 @@ void main(){
 | bg1 + over1 | constantTOP + overTOP | фон 0.02/0.02/0.035, bloom1 поверх bg1 | цвет фона |
 | out1 | nullTOP | — | не переименовывать |
 
-## 4. Отклонения от видео
+## 4. Вариант: крупнее и аудио-реактивный (наша доработка, не из видео)
+Сеть: `projects/exploding-star-sphere/stage_work_export_audio.json`.
+
+**Крупнее:** `math_len.gain` 1 (радиус 1), `camera1.tz` 5.4 — шар около 80% высоты кадра.
+
+**Аудио-цепочка** (блок «7 · Аудио»):
+```
+audio_in (audiofileinCHOP, playmode sequential, repeat) → audio_out_dev (звук наружу)
+audio_in → bass_filt (lowpass 150 Гц) → bass_rms (analyze rmspower) → bass_lag (0.02 / 0.35 с) → bass_norm (0.05…0.42 → 0…1) → bass_clamp → audio_bass
+audio_in → level_rms → level_lag (0.05 / 0.6) → level_norm (0.05…0.42) → level_clamp → audio_level
+audio_in → high_filt (highpass 4000 Гц) → high_rms → high_lag (0.01 / 0.2) → high_norm (0.006…0.07) → high_clamp → audio_high
+bass_rms → kick_lag (0 / 0.06) → kick_norm (0.18…0.4) → kick_trig (threshup 0.75, down 0.4, attack 0, decay 0.25) → audio_kick
+```
+
+| Куда | Выражение | Что менять |
+|---|---|---|
+| Дыхание шара | `math_len.gain = 1/(0.82 + 0.08*bass + 0.05*kick)` | 0.82 — базовый радиус; множители 0–0.2 |
+| Вспышки «звезды» на удар | `math_len.preoff = -0.035*kick` | 0 … −0.1. Больше −0.06 — лучи вылетают за кадр |
+| Скорость потока | `math_step.gain = 0.0008 + 0.0035*level` | множитель 0.001–0.005 |
+| Искры по верхам | `pointsprite1.alpha = 0.35 + 0.35*high` | — |
+| Свечение | `bloom1.bloomintensity = 0.25 + 0.55*high + 0.4*kick` | — |
+| Яркость | `level_color.brightness1 = 1.3 + 0.5*level` | — |
+| Вращение | `geo_ps.ry = absTime.seconds*5`, `geo_ps.rx = math.sin(absTime.seconds*0.13)*12` | множители |
+
+Где `bass = op('audio_bass')[0]` и так далее. Диапазоны `*_norm` подобраны под пример из папки TouchDesigner (`Audio/JeremyCaulfield…mp3`). Для своего трека смотреть пики `*_rms` и ставить `fromrange2` чуть ниже пика. Первая версия с `preoff = -0.10*kick` и радиусом 1.18 выбрасывала частицы далеко за кадр (кадр `08` снят уже после правки).
+
+## 5. Отклонения от видео
 - Life автора недоступен, заменён GLSL `life_pos` (блок 5). Как именно его компонент перерождает частицы, по видео не видно.
 - `point_xform.ry = 0` вместо 0.9: с вращением полотна у нас размазываются, причина пока не найдена.
 - Point Sprite: у нас сложение (`destblend=one`, alpha 0.5, size 1), у автора альфа-смешивание (Constant Point Scale 0.5, Alpha 1, Sorted Draw). Дымки у нас больше, пустот меньше.
 - Цветной окантовки по краям, как в начале видео, нет: этот эффект в разобранных кадрах не найден.
 - Render 1920×1080 16-bit float вместо 1280×720 8-bit.
 
-## 5. Проверка
+## 6. Проверка
 - `chopto1`, `pos`, `end` — 1000×1000, 32-bit float; fps 60 (M4 Pro), рендер около 1 мс.
 - Кадр через 2–5 секунд после сброса (клавиша 1): шар из полотен и нитей с пустыми областями, без равномерной заливки и без яркой полосы на экваторе.
 - `math_len.preoff = -0.08`: оболочка рвётся в лучи «звезды».
